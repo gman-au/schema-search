@@ -2,20 +2,57 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+        <DebugType>Embedded</DebugType>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>false</IncludeSymbols>
+        <IncludeSource>false</IncludeSource>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <OutputType>Library</OutputType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <IncludeReferencedProjects>true</IncludeReferencedProjects>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Company>G-MAN Solutions</Company>
+        <Authors>Gabriel Palma</Authors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>SchemaSearch.EntityFramework</PackageId>
+        <Description>Database schema search tool - EF implementation</Description>
+        <RepositoryUrl>https://github.com/gman-au/schema-search</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SchemaSearch.Domain.Schema\SchemaSearch.Domain.Schema.csproj" />
-      <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj" />
+        <ProjectReference Include="..\SchemaSearch.Application\SchemaSearch.Application.csproj"/>
+        <ProjectReference Include="..\SchemaSearch.Domain.Schema\SchemaSearch.Domain.Schema.csproj"/>
+        <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0"/>
+    </ItemGroup>
+
+    <!-- Include referenced project outputs -->
+    <ItemGroup>
+        <None Include="$(OutputPath)SchemaSearch.*.*.dll" Pack="true" PackagePath="lib\$(TargetFramework)" />
+        <None Include="$(OutputPath)SchemaSearch.*.dll" Pack="true" PackagePath="lib\$(TargetFramework)" />
+        <None Include="$(OutputPath)SchemaSearch.*.*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)" />
+        <None Include="$(OutputPath)SchemaSearch.*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)" />
     </ItemGroup>
 
 </Project>

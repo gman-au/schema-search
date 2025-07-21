@@ -10,8 +10,14 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\SchemaSearch.EntityFramework.Injection\SchemaSearch.EntityFramework.Injection.csproj" />
+      <ProjectReference Include="..\SchemaSearch.EntityFramework\SchemaSearch.EntityFramework.csproj" />
       <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <None Update="appsettings.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

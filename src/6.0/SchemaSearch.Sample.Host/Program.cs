@@ -43,5 +43,5 @@ foreach (var table in allTables)
     {
         Console.WriteLine($"\tColumn: {column}");
     }
-    Console.WriteLine($"------");
+    Console.WriteLine("------");
 }
