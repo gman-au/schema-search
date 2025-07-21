@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SchemaSearch.EntityFramework.Injection;
 using SchemaSearch.Interfaces;
@@ -25,6 +27,21 @@ var searchApplication =
         .ServiceProvider
         .GetRequiredService<ISchemaSearchApplication>();
 
-await
-    searchApplication
-        .RunAsync();
+var allTables =
+    (await
+        searchApplication
+            .RunAsync())
+    .ToList();
+
+Console
+    .WriteLine($"Extracted {allTables.Count}");
+
+foreach (var table in allTables)
+{
+    Console.WriteLine($"Table: {table}");
+    foreach (var column in table.Columns)
+    {
+        Console.WriteLine($"\tColumn: {column}");
+    }
+    Console.WriteLine($"------");
+}
