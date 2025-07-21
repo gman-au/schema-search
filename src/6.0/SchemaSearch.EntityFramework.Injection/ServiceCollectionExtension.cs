@@ -9,7 +9,7 @@ namespace SchemaSearch.EntityFramework.Injection
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddSqlServerServices(
+        public static IServiceCollection AddEntityFrameworkServices(
             this IServiceCollection services,
             IConfiguration configuration)
         {

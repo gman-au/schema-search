@@ -7,19 +7,29 @@ using SchemaSearch.Interfaces;
 
 namespace SchemaSearch.Application
 {
-    public class SchemaSearchApplication(
-        ILogger<SchemaSearchApplication> logger,
-        ISchemaExtractor schemaExtractor)
+    public class SchemaSearchApplication
         : ISchemaSearchApplication
     {
+        private readonly ISchemaExtractor _schemaExtractor;
+        private readonly ILogger<SchemaSearchApplication> _logger;
+
+        public SchemaSearchApplication(
+            ISchemaExtractor schemaExtractor,
+            ILogger<SchemaSearchApplication> logger
+            )
+        {
+            _schemaExtractor = schemaExtractor;
+            _logger = logger;
+        }
+
         public async Task<IEnumerable<SchemaTable>> RunAsync(CancellationToken cancellationToken = default)
         {
-            logger
+            _logger
                 .LogInformation("Running schema extraction");
 
             var tables =
                 await
-                    schemaExtractor
+                    _schemaExtractor
                         .PerformAsync(cancellationToken);
 
             return tables;

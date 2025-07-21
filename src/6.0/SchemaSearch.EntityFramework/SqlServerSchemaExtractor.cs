@@ -10,21 +10,30 @@ using SchemaSearch.Interfaces;
 
 namespace SchemaSearch.EntityFramework
 {
-    public class SqlServerSchemaExtractor(
-        ILogger<SqlServerSchemaExtractor> logger,
-        IContextFactory contextFactory)
+    public class SqlServerSchemaExtractor
         : ISchemaExtractor
     {
+        private readonly IContextFactory _contextFactory;
+        private readonly ILogger<SqlServerSchemaExtractor> _logger;
+
+        public SqlServerSchemaExtractor(
+            IContextFactory contextFactory,
+            ILogger<SqlServerSchemaExtractor> logger)
+        {
+            _contextFactory = contextFactory;
+            _logger = logger;
+        }
+
         public async Task<IEnumerable<SchemaTable>> PerformAsync(CancellationToken cancellationToken = default)
         {
             List<SchemaTable> tableResults;
 
-            logger
+            _logger
                 .LogInformation("Attempting to extract schema");
 
             try
             {
-                await using var db = contextFactory.GetContext();
+                await using var db = _contextFactory.GetContext();
 
                 var canConnect =
                     await
@@ -33,7 +42,7 @@ namespace SchemaSearch.EntityFramework
                             .CanConnectAsync(cancellationToken);
 
                 if (canConnect)
-                    logger
+                    _logger
                         .LogInformation("Connected to SQL Server");
                 else
                     throw new Exception("Could not connect to SQL Server");
@@ -55,7 +64,7 @@ namespace SchemaSearch.EntityFramework
             }
             catch (Exception ex)
             {
-                logger
+                _logger
                     .LogError("Error extracting schema: {message}", ex.Message);
 
                 throw;
@@ -70,27 +79,27 @@ namespace SchemaSearch.EntityFramework
 
             try
             {
-                await using var db = contextFactory.GetContext();
+                await using var db = _contextFactory.GetContext();
 
                 tableResults =
                     await
                         db
                             .SchemaTables
                             .FromSqlInterpolated(
-                                $"""
+                                $@"
                                  SELECT 
                                      TABLE_CATALOG AS TableCatalog,
                                      TABLE_SCHEMA AS TableSchema, 
                                      TABLE_NAME AS TableName, 
                                      TABLE_TYPE AS TableType 
                                  FROM INFORMATION_SCHEMA.TABLES
-                                 """)
+                                 ")
                             .ToListAsync(cancellationToken);
 
-                logger
+                _logger
                     .LogInformation("Extracted {count} tables", tableResults.Count);
 
-                logger
+                _logger
                     .LogDebug(
                         "Found tables:\r\n{tables}",
                         string.Join("\r\n", tableResults.Select(o => o.TableName))
@@ -98,7 +107,7 @@ namespace SchemaSearch.EntityFramework
             }
             catch (Exception ex)
             {
-                logger
+                _logger
                     .LogError("Error extracting schema tables: {message}", ex.Message);
 
                 throw;
@@ -115,7 +124,7 @@ namespace SchemaSearch.EntityFramework
 
             try
             {
-                await using var db = contextFactory.GetContext();
+                await using var db = _contextFactory.GetContext();
 
                 var tableSchema = schemaTable.TableSchema;
                 var tableName = schemaTable.TableName;
@@ -125,7 +134,7 @@ namespace SchemaSearch.EntityFramework
                         db
                             .SchemaTableColumns
                             .FromSqlInterpolated(
-                                $"""
+                                $@"
                                  SELECT 
                                      COLUMN_NAME AS ColumnName,
                                      ORDINAL_POSITION AS OrdinalPosition, 
@@ -168,11 +177,11 @@ namespace SchemaSearch.EntityFramework
                                  FROM INFORMATION_SCHEMA.COLUMNS
                                  WHERE TABLE_SCHEMA = {tableSchema} 
                                  AND TABLE_NAME = {tableName}
-                                 """
+                                 "
                             )
                             .ToListAsync(cancellationToken);
 
-                logger
+                _logger
                     .LogInformation(
                         "Extracted {count} columns from table {schema}.{table}",
                         tableColumnResults.Count,
@@ -182,7 +191,7 @@ namespace SchemaSearch.EntityFramework
             }
             catch (Exception ex)
             {
-                logger
+                _logger
                     .LogError("Error extracting schema table columns for {schemaTable}: {message}", schemaTable,
                         ex.Message);
 
@@ -203,7 +212,7 @@ namespace SchemaSearch.EntityFramework
             {
                 var unmatchedForeignKeys = 0;
 
-                await using var db = contextFactory.GetContext();
+                await using var db = _contextFactory.GetContext();
 
                 var tableSchema = schemaTable.TableSchema;
                 var tableName = schemaTable.TableName;
@@ -213,7 +222,7 @@ namespace SchemaSearch.EntityFramework
                         db
                             .SchemaTableForeignKeys
                             .FromSqlInterpolated(
-                                $"""
+                                $@"
                                  SELECT 
                                       KCU1.CONSTRAINT_SCHEMA AS ForeignKeyConstraintSchema 
                                      ,KCU1.CONSTRAINT_NAME AS ForeignKeyConstraintName 
@@ -239,7 +248,7 @@ namespace SchemaSearch.EntityFramework
                                      AND KCU2.ORDINAL_POSITION = KCU1.ORDINAL_POSITION 
                                      WHERE KCU2.TABLE_SCHEMA = {tableSchema}
                                      AND KCU2.TABLE_NAME = {tableName}
-                                 """
+                                 "
                             )
                             .ToListAsync(cancellationToken);
 
@@ -274,12 +283,12 @@ namespace SchemaSearch.EntityFramework
                     // If not matched, warn and nullify
                     if (referencedColumn == null || foreignKeyColumn == null)
                     {
-                        logger
+                        _logger
                             .LogWarning(
-                                """
+                                @"
                                 Could not match foreign key constraint {0}.{1} 
                                 to referenced constraint {2}.{3}
-                                """,
+                                ",
                                 tableForeignKeyResult.ForeignKeyConstraintSchema,
                                 tableForeignKeyResult.ForeignKeyConstraintName,
                                 tableForeignKeyResult.ReferencedConstraintSchema,
@@ -294,7 +303,7 @@ namespace SchemaSearch.EntityFramework
                     }
                 }
 
-                logger
+                _logger
                     .LogInformation(
                         "Extracted {count} foreign keys from table {schemaTable}, {unmatched} unmatched",
                         tableForeignKeyResults.Count,
@@ -304,7 +313,7 @@ namespace SchemaSearch.EntityFramework
             }
             catch (Exception ex)
             {
-                logger
+                _logger
                     .LogError("Error extracting foreign keys for {schemaTable}: {message}", schemaTable, ex.Message);
 
                 throw;

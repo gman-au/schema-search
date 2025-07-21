@@ -3,8 +3,12 @@ using SchemaSearch.Domain.Schema;
 
 namespace SchemaSearch.EntityFramework
 {
-    public class SchemaDbContext(DbContextOptions<SchemaDbContext> options) : DbContext(options)
+    public class SchemaDbContext : DbContext
     {
+        public SchemaDbContext(DbContextOptions options) : base(options)
+        {
+        }
+
         public virtual DbSet<SchemaTable> SchemaTables { get; set; }
 
         public virtual DbSet<SchemaTableColumn> SchemaTableColumns { get; set; }
