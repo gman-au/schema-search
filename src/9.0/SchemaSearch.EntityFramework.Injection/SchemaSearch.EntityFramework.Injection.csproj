@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.6" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6"/>
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.6"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SchemaSearch.Application\SchemaSearch.Application.csproj" />
+      <ProjectReference Include="..\SchemaSearch.EntityFramework\SchemaSearch.EntityFramework.csproj" />
+      <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj" />
+    </ItemGroup>
+
+</Project>
