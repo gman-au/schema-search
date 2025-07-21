@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+        <DebugType>Embedded</DebugType>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <IncludeSymbols>false</IncludeSymbols>
+        <IncludeSource>false</IncludeSource>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <OutputType>Library</OutputType>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+        <IncludeReferencedProjects>true</IncludeReferencedProjects>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Company>G-MAN Solutions</Company>
+        <Authors>Gabriel Palma</Authors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>SchemaSearch</PackageId>
+        <Description>Database schema search tool</Description>
+        <RepositoryUrl>https://github.com/gman-au/schema-search</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj" PrivateAssets="All"/>
+    </ItemGroup>
+
+</Project>

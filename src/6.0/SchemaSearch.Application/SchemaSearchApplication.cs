@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SchemaSearch.Domain.Schema;
 using SchemaSearch.Interfaces;
 
@@ -15,16 +16,16 @@ namespace SchemaSearch.Application
 
         public SchemaSearchApplication(
             ISchemaExtractor schemaExtractor,
-            ILogger<SchemaSearchApplication> logger
+            ILogger<SchemaSearchApplication> logger = null
             )
         {
             _schemaExtractor = schemaExtractor;
-            _logger = logger;
+            _logger = logger ?? NullLogger<SchemaSearchApplication>.Instance;
         }
 
         public async Task<IEnumerable<SchemaTable>> RunAsync(CancellationToken cancellationToken = default)
         {
-            _logger
+            _logger?
                 .LogInformation("Running schema extraction");
 
             var tables =

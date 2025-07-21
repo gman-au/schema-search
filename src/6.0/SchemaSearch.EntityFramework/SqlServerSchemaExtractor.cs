@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using SchemaSearch.Domain.Schema;
 using SchemaSearch.Interfaces;
 
@@ -18,10 +19,10 @@ namespace SchemaSearch.EntityFramework
 
         public SqlServerSchemaExtractor(
             IContextFactory contextFactory,
-            ILogger<SqlServerSchemaExtractor> logger)
+            ILogger<SqlServerSchemaExtractor> logger = null)
         {
             _contextFactory = contextFactory;
-            _logger = logger;
+            _logger = logger ?? NullLogger<SqlServerSchemaExtractor>.Instance;
         }
 
         public async Task<IEnumerable<SchemaTable>> PerformAsync(CancellationToken cancellationToken = default)
@@ -43,9 +44,9 @@ namespace SchemaSearch.EntityFramework
 
                 if (canConnect)
                     _logger
-                        .LogInformation("Connected to SQL Server");
+                        .LogInformation("Connected to database");
                 else
-                    throw new Exception("Could not connect to SQL Server");
+                    throw new Exception("Could not connect to database");
 
                 tableResults =
                     (await
