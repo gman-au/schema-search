@@ -30,9 +30,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SchemaSearch.Application\SchemaSearch.Application.csproj"/>
-        <ProjectReference Include="..\SchemaSearch.Domain.Schema\SchemaSearch.Domain.Schema.csproj"/>
-        <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj"/>
+        <ProjectReference Include="..\SchemaSearch.Application\SchemaSearch.Application.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\SchemaSearch.Domain.Schema\SchemaSearch.Domain.Schema.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\SchemaSearch.Interfaces\SchemaSearch.Interfaces.csproj" PrivateAssets="All"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -49,10 +49,10 @@
 
     <!-- Include referenced project outputs -->
     <ItemGroup>
-        <None Include="$(OutputPath)SchemaSearch.*.*.dll" Pack="true" PackagePath="lib\$(TargetFramework)" />
-        <None Include="$(OutputPath)SchemaSearch.*.dll" Pack="true" PackagePath="lib\$(TargetFramework)" />
-        <None Include="$(OutputPath)SchemaSearch.*.*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)" />
-        <None Include="$(OutputPath)SchemaSearch.*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)" />
+        <None Include="$(OutputPath)SchemaSearch.*.*.dll" Pack="true" PackagePath="lib\$(TargetFramework)"/>
+        <None Include="$(OutputPath)SchemaSearch.*.dll" Pack="true" PackagePath="lib\$(TargetFramework)"/>
+        <None Include="$(OutputPath)SchemaSearch.*.*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)"/>
+        <None Include="$(OutputPath)SchemaSearch.*.pdb" Pack="true" PackagePath="lib\$(TargetFramework)"/>
     </ItemGroup>
 
 </Project>
