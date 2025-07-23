@@ -10,7 +10,9 @@ namespace SchemaSearch.Domain.Schema
 
         public bool IsNullable { get; set; }
 
-        public DataTypeEnum DataType { get; set; }
+        public string DataType { get; set; }
+
+        public DataTypeEnum MappedDataType { get; set; }
 
         public int? MaxLength { get; set; }
 

@@ -143,6 +143,7 @@ namespace SchemaSearch.EntityFramework
                                      CHARACTER_MAXIMUM_LENGTH AS MaxLength, 
                                      CHARACTER_OCTET_LENGTH AS OctetLength, 
                                      NUMERIC_PRECISION AS NumericPrecision,
+                                     DATA_TYPE AS DataType,
                                      CASE (DATA_TYPE)
                                         -- string
                                         WHEN 'char' THEN 1
@@ -174,7 +175,7 @@ namespace SchemaSearch.EntityFramework
                                         -- guid
                                         WHEN 'uniqueidentifier' THEN 6
                                         ELSE 0
-                                     END as DataType
+                                     END as MappedDataType
                                  FROM INFORMATION_SCHEMA.COLUMNS
                                  WHERE TABLE_SCHEMA = {tableSchema} 
                                  AND TABLE_NAME = {tableName}
@@ -265,8 +266,7 @@ namespace SchemaSearch.EntityFramework
                         foreignKeyTable?
                             .Columns?
                             .FirstOrDefault(
-                                c => c.ColumnName == tableForeignKeyResult.ForeignKeyColumnName &&
-                                     c.OrdinalPosition == tableForeignKeyResult.ForeignKeyOrdinalPosition);
+                                c => c.ColumnName == tableForeignKeyResult.ForeignKeyColumnName);
 
                     var referencedTable =
                         tables
@@ -278,8 +278,7 @@ namespace SchemaSearch.EntityFramework
                         referencedTable?
                             .Columns?
                             .FirstOrDefault(
-                                c => c.ColumnName == tableForeignKeyResult.ReferencedColumnName &&
-                                     c.OrdinalPosition == tableForeignKeyResult.ReferencedOrdinalPosition);
+                                c => c.ColumnName == tableForeignKeyResult.ReferencedColumnName);
 
                     // If not matched, warn and nullify
                     if (referencedColumn == null || foreignKeyColumn == null)
@@ -299,7 +298,9 @@ namespace SchemaSearch.EntityFramework
                     }
                     else
                     {
+                        tableForeignKeyResult.ForeignKeyTable = foreignKeyTable;
                         tableForeignKeyResult.ForeignKeyColumn = foreignKeyColumn;
+                        tableForeignKeyResult.ReferencedTable = referencedTable;
                         tableForeignKeyResult.ReferencedColumn = referencedColumn;
                     }
                 }
